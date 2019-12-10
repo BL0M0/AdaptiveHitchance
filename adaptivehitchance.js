@@ -243,7 +243,7 @@ function setup() {
     UI.AddSliderInt("SMG In-Air HC", 0, 100);
     UI.AddSliderInt("Heavy Pistol In-Air HC", 0, 100);
     Cheat.PrintColor([255, 75, 100, 25],
-        "\n------------------------\n[AHC] v1.3 BETA by Ultranite\n------------------------\n");
+        "\n------------------------\n[AHC] v1.3 by Ultranite\n------------------------\n");
     /*
      *            HOW TO CONFIG SETTINGS
      *  Enable the config button and reload the script, all settings will be set
