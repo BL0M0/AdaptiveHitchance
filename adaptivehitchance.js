@@ -132,6 +132,8 @@ function drawIndicator() {
     }
 
     hitchance = UI.GetValue("Rage", weaponType().toUpperCase(), "Accuracy", "Hitchance");
+    if(weaponType() == "Rifle" || weaponType() == "SMG")
+      hitchance = UI.GetValue("Rage", "GENERAL", "Accuracy", "Hitchance");
 
     if(hitchance > 65)
       color = [0,255,0,255];
