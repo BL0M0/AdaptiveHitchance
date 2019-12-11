@@ -109,6 +109,39 @@ function drawIndicator() {
     var color = UI.GetColor("Script items", "[AHC] Target Indicator");
     Render.Circle(loc[0], loc[1] - 142, 20, color);
     Render.String(loc[0] - 7, loc[1] - 160, 0, "!", color, 24);
+
+    if(!UI.GetValue("Script items", "[AHC] Hitchance Indicator")) {
+        UI.SetEnabled("Script items", "[AHC] Indicator Location X", false);
+        UI.SetEnabled("Script items", "[AHC] Indicator Location Y", false);
+        return;
+    } else {
+      UI.SetEnabled("Script items", "[AHC] Indicator Location X", true);
+      UI.SetEnabled("Script items", "[AHC] Indicator Location Y", true);
+    }
+
+    screenSize = Render.GetScreenSize();
+    position = UI.GetString("Script items", "[AHC] Hitchance Indicator Position");
+    color = [0,255,0,255];
+
+    x = UI.GetValue("Script items", "[AHC] Indicator Location X");
+    y = UI.GetValue("Script items", "[AHC] Indicator Location Y");
+
+    if(weaponType() == undefined || calcDist(local, targetIndex) >= 500 || targetIndex == undefined || targetIndex == -1) {
+        Render.String(x,y,0,"HC:-", [255,255,255,255], 30);
+        return;
+    }
+
+    hitchance = UI.GetValue("Rage", weaponType().toUpperCase(), "Accuracy", "Hitchance");
+
+    if(hitchance > 65)
+      color = [0,255,0,255];
+    else
+    if(hitchance > 45)
+      color = [255,255,0,255];
+    else
+      color = [255,0,0,255];
+
+    Render.String(x,y,0,"HC:"+hitchance, color, 30);
 }
 
 function drawInMenu() {
@@ -224,8 +257,10 @@ function setup() {
     UI.AddCheckbox("[AHC] Enable Adaptive Hitchance");
     UI.AddCheckbox("[AHC] Show Indicators");
     UI.AddColorPicker("[AHC] Target Indicator");
+    UI.AddCheckbox("[AHC] Hitchance Indicator");
+    UI.AddSliderInt("[AHC] Indicator Location X", 0, Render.GetScreenSize()[0]-125);
+    UI.AddSliderInt("[AHC] Indicator Location Y", 0, Render.GetScreenSize()[1]-25);
     UI.SetColor("Script items", "[AHC] Target Indicator", [255, 0, 255, 255]);
-    UI.AddCheckbox("[AHC] Use Config Settings");
     UI.AddDropdown("[AHC] Mode", ["Increasing", "Decreasing"]);
     UI.AddCheckbox("[AHC] In-Air HC");
     UI.AddCheckbox("[AHC] Account for inaccuracy")
@@ -243,74 +278,7 @@ function setup() {
     UI.AddSliderInt("SMG In-Air HC", 0, 100);
     UI.AddSliderInt("Heavy Pistol In-Air HC", 0, 100);
     Cheat.PrintColor([255, 75, 100, 25],
-        "\n------------------------\n[AHC] v1.3 by Ultranite\n------------------------\n");
-    /*
-     *            HOW TO CONFIG SETTINGS
-     *  Enable the config button and reload the script, all settings will be set
-     *  to the values below.
-     *
-     *  You can set a default value by doing the following:
-     *  UI.SetValue("Script items", "name of option/slider", value);
-     *
-     *  In order to pick a mode or playstyle, simply set 0 for increasing/agressive (accordingly)
-     *  and 1 for decreasing/passive.
-     *
-     *  In order to config the enabled weapons, you need to think of it as binary value.
-     *  For example: If you want to enabled Auto, Scout, and AWP, the total you'd need to
-     *  set the dropdown to would be 7.
-     *
-     *  Bits go in this order:
-     *  1, 2, 4, 8, 16, 32, 64, 128
-     *
-     *  All you have to do is find the position of the gun(s) you want enabled and
-     *  add the values of the list above that are in the same position.
-     *
-     *  Checkboxes are set as true/false.
-     *
-     *  Colors can be set in the format of [r,g,b,alpha]
-     *
-     *  If you ever wonder how to use something, check the forums:
-     *  https://onetap.su/resources/
-     *
-     *  Add me on discord @Ultranite#9259 for help.
-     *
-     */
-    if (!UI.GetValue("[AHC] Use Config Settings"))
-        return;
-    UI.SetValue("Script items", "[AHC] Enable Adaptive Hitchance", true);
-    UI.SetValue("Script items", "[AHC] Show Indicators", true);
-    UI.SetValue("Script items", "[AHC] Mode", 1);
-    UI.SetValue("Script items", "[AHC] In-Air HC", true);
-    UI.SetValue("Script items", "[AHC] Account for inaccuracy", true);
-    UI.SetValue("Script items", "[AHC] Adaptive Doubletap", true);
-    UI.SetValue("Script items", "Doubletap Max HC", 45);
-    UI.SetValue("Script items", "Doubletap Min HC", 0);
-    UI.SetValue("Script items", "[AHC] Enabled Weapons", 127);
-    // PER WEAPON
-    UI.SetValue("Script items", "Auto Playstyle", 0);
-    UI.SetValue("Script items", "Auto Max HC", 86);
-    UI.SetValue("Script items", "Auto Min HC", 63);
-    UI.SetValue("Script items", "AWP Playstyle", 0);
-    UI.SetValue("Script items", "AWP Max HC", 87);
-    UI.SetValue("Script items", "AWP Min HC", 60);
-    UI.SetValue("Script items", "Scout Playstyle", 0);
-    UI.SetValue("Script items", "Scout Max HC", 91);
-    UI.SetValue("Script items", "Scout Min HC", 63);
-    UI.SetValue("Script items", "Scout In-Air HC", 55);
-    UI.SetValue("Script items", "Rifle Playstyle", 0);
-    UI.SetValue("Script items", "Rifle Max HC", 65);
-    UI.SetValue("Script items", "Rifle Min HC", 35);
-    UI.SetValue("Script items", "SMG Playstyle", 0);
-    UI.SetValue("Script items", "SMG Max HC", 29);
-    UI.SetValue("Script items", "SMG Min HC", 12);
-    UI.SetValue("Script items", "SMG In-Air HC", 12);
-    UI.SetValue("Script items", "Pistol Playstyle", 0);
-    UI.SetValue("Script items", "Pistol Max HC", 40);
-    UI.SetValue("Script items", "Pistol Min HC", 15);
-    UI.SetValue("Script items", "Heavy Pistol Playstyle", 0);
-    UI.SetValue("Script items", "Heavy Pistol Max HC", 89);
-    UI.SetValue("Script items", "Heavy Pistol Min HC", 62);
-    UI.SetValue("Script items", "Heavy Pistol In-Air HC", 0);
+        "\n------------------------\n[AHC] v1.4 by Ultranite\n------------------------\n");
 }
 runTime = Global.Curtime();
 var secondsElapsed = 0;
