@@ -139,8 +139,7 @@ function drawIndicator()
     color = [0, 255, 0, 255];
     x = UI.GetValue("Script items", "[AHC] Indicator Location X");
     y = UI.GetValue("Script items", "[AHC] Indicator Location Y");
-    if (weaponType() == undefined || calcDist(local, targetIndex) >= 500 || targetIndex == undefined || targetIndex == -
-        1)
+    if (weaponType() == undefined || calcDist(local, targetIndex) >= 500 || targetIndex == undefined || targetIndex == -1)
     {
         Render.String(x, y, 0, "HC:-", [255, 255, 255, 255], 30);
         return;
@@ -174,6 +173,7 @@ function drawInMenu()
     UI.SetEnabled("Script items", "SMG In-Air HC", opts == "SMG" && inAir);
     UI.SetEnabled("Script items", "Scout In-Air HC", opts == "Scout" && inAir);
     UI.SetEnabled("Script items", "Heavy Pistol In-Air HC", opts == "Heavy Pistol" && inAir);
+    UI.SetEnabled("Script items", "Heavy In-Air HC", opts == "Heavy" && inAir);
     UI.SetEnabled("Script items", "Doubletap Max HC", dt);
     UI.SetEnabled("Script items", "Doubletap Min HC", dt);
 }
@@ -209,8 +209,8 @@ function weaponType()
         "negev": "Heavy"
     };
 
-    if (weapons[weapon] == undefined)
-        return "";
+    if(weapons[weapon] == undefined)
+      return "";
 
     return weapons[weapon];
 }
@@ -295,8 +295,7 @@ function setup()
     UI.AddDropdown("[AHC] Mode", ["Increasing", "Decreasing"]);
     UI.AddCheckbox("[AHC] In-Air HC");
     UI.AddCheckbox("[AHC] Account for inaccuracy")
-    createDropdown("[AHC] Enabled Weapons", ["Auto", "Scout", "AWP", "Rifle", "SMG", "Pistol", "Heavy Pistol", "Heavy"],
-        true);
+    createDropdown("[AHC] Enabled Weapons", ["Auto", "Scout", "AWP", "Rifle", "SMG", "Pistol", "Heavy Pistol", "Heavy"], true);
     UI.AddCheckbox("[AHC] Adaptive Doubletap");
     UI.AddSliderInt("Doubletap Max HC", 0, 100);
     UI.AddSliderInt("Doubletap Min HC", 0, 100);
